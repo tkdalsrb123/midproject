@@ -1,0 +1,35 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import koreanize_matplotlib
+from glob import glob
+
+# 파일 불러오기
+raw = pd.read_excel(glob('Data/*')[-1])
+
+# 필요한 데이터 추출
+raw = raw.drop('BASE:전체',axis=1)
+raw = raw.set_index('Unnamed: 1')
+df_m = raw.iloc[1:13]
+df_c = raw.iloc[13:34]
+df_s = raw.iloc[34:36]
+df_a = raw.iloc[36:]
+
+# 데이터 전처리
+df_c.index = df_c.index.str.replace(' ','')
+df_c.index = df_c.index.rename('국가')
+df_c['사례수'] = df_c['사례수'].str.replace('(','')
+df_c['사례수'] = df_c['사례수'].str.replace(')','')
+df_c['사례수'] = df_c['사례수'].astype(int)
+df_new = pd.DataFrame(index=df_c.index ,columns=['여가, 위락, 휴식','사업 또는 전문 활동','교육 (어학 프로그램, 연수 등)','종교 및 순례','기타'])
+df_new['여가, 위락, 휴식'] = round(df_c['사례수'] * df_c['여가, 위락, 휴식'] * 0.01, 3)
+df_new['사업 또는 전문 활동'] = round(df_c['사례수'] * df_c['사업 또는 전문 활동'] * 0.01, 3)
+df_new['교육 (어학 프로그램, 연수 등)'] = round(df_c['사례수'] * df_c['교육 (어학 프로그램, 연수 등)'] * 0.01, 3)
+df_new['종교 및 순례'] = round(df_c['사례수'] * df_c['종교 및 순례'] * 0.01, 3)
+df_new['기타'] =  round(df_c['사례수'] * df_c['기타'] * 0.01, 3)
+
+# 전체 데이터 추가
+new_data = {'여가, 위락, 휴식': round(df_new['여가, 위락, 휴식'].sum(),3), '사업 또는 전문 활동':round(df_new['사업 또는 전문 활동'].sum(),3),
+           '교육 (어학 프로그램, 연수 등)': round(df_new['교육 (어학 프로그램, 연수 등)'].sum(),3),'종교 및 순례':round(df_new['종교 및 순례'].sum(),3),'기타':round(df_new['기타'].sum(),3)}
+new_data = pd.DataFrame(new_data, index=['전체'])
+df_new_all = df_new.append(new_data)
