@@ -93,15 +93,16 @@ with tab2:
     with cols[1]:
         st.markdown('### 방문자수와 인당소비액 비교')
         fig, axe1 = plt.subplots(figsize=(10,10))
+        fig.autofmt_xdate(rotation=45) 
+        plt.rcParams['font.size'] = 5
         axe2 = axe1.twinx()
         sns.barplot(ax = axe1, data=df_re, x="광역지자체", y="인당 소비액", ci=None, color='red')
         sns.lineplot(ax = axe2, data=df_re, x="광역지자체", y="방문자수", color='blue')
         axe2.legend(["방문자수", "인당 소비액"]) 
-        plt.xticks(rotation= 60)
         st.pyplot(fig)
         st.markdown('방문자 수에 비해 인당 소비액이 높은 곳들을 공략하면 많은 관광 수익을 얻을 수 있을 거라고 추측됩니다.')
     
-    st.markdown('## 고액소비의 대부분이 중국에 몰려있고 그 소비가 대부분 서울과 호텔, 면세점, 백화점에 편중되어 있는것으로 보아 고액소비자의 많은 비율을 중국 관광객이 차지하고있다.')
+    st.markdown('#### 고액소비의 대부분이 중국에 몰려있고 그 소비가 대부분 서울과 호텔, 면세점, 백화점에 편중되어 있는것으로 보아 고액소비자의 많은 비율을 중국 관광객이 차지하고있다.')
 
 with tab3:
     st.markdown('# 최근 방한여행객 동향')
